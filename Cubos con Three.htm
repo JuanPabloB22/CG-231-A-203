@@ -18,39 +18,48 @@
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );
 
-			//directionalLight genera los a lo diferentes cubos 
+			//directionalLight: emite luz en una direccion especifica generando sombras en los cubos.
             const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
             scene.add( directionalLight );
 
-			//Se ingresan los valores de escalado a los 3 cubos 
-            const escalado = [[1,1,1], [1.3,1.3,1.3], [1.3,1.3,1.3]];
-            var geometria = [];
+            
+			//Dim: Se guardan en un arreglo los objetos referidos para construirlos.           
+            const dim = [[1,1,1], [1.3,1.3,1.3], [1.3,1.3,1.3]];
+            // Cubos : Se guardan los cubos deseados en el arreglo 
+            var cubos = [];
 
 
-			//for: Genera la geometria de los 3 diferentes cubos
+			//for: Genera la geometria de los 3 diferentes cubos realizando el escalado respecto a cada cubo.
             for (let i=0; i<3; i++) {
-                geometria.push(new THREE.BoxGeometry(escalado[i][0], escalado[i][1], escalado[i][2]));
+                cubos.push(new THREE.BoxGeometry(dim[i][0], dim[i][1], dim[i][2]));
             }
-			//Color = Entra en un arreglo los diferentes colores respecto a los cubos 
+			//Color: Entra en un arreglo los diferentes colores respecto a los 3 cubos partiendo del primero al tercero.
             const color = [{color:0xFF5733}, {color:0xF9FF33}, {color:0xFF33F6}];
-            //Material que van usar los diferentes cubos a partir del arreglo         
+
+            
+            //Material : Entra en un arreglo los diferentes materiales deseados para los cubos;
+            //MeshMatcapMaterial = codifica el color y el sombreado del material. 
+            //MeshLambertMaterial = Un material para superficies no brillantes, sin reflejos especulares .
+            //MeshPhongMaterial = Un material parecido a Lambert pero Phong usa sombreado por fragmento.                  
             const material=[new THREE.MeshMatcapMaterial(color[0]),new THREE.MeshLambertMaterial(color[1]),new THREE.MeshPhongMaterial(color[2])];
             
+            //A traves de una nueva estructura for agregamos a la malla cada cubo
             const cube =[];
             for (let i=0; i<3; i++) {
-                cube.push(new THREE.Mesh(geometria[i], material[i]));
+                cube.push(new THREE.Mesh(cubos[i], material[i]));
             }
-
+            //Agregamos cada cubo a la escena a travez en una estructura for
             for (let i=0; i<3; i++) {
                 scene.add( cube[i] );
             }
-
+            
+            //Ubicamos el segundo y tercer cubo en un posicion diferente en x para observarlos
             cube[1].position.x = 2;
             cube[2].position.x = -2;
 
             camera.position.z = 5;
 
-
+            // Animate: Es una funcion que anima cada cubo y modifica la velocidad de rotacion de cada cubo.
             function animate() {
                 requestAnimationFrame( animate );
 
